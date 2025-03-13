@@ -22,6 +22,7 @@ import java.util.Set;
 public class AuditListener implements PostInsertEventListener, PostUpdateEventListener, PostDeleteEventListener {
 
     private final Set<String> excludedEntities = Set.of("AuditLog", "HttpTraceAuditLog");
+    private final Set<String> keyFields = Set.of("tradeId");
 
     private final AuditService auditService;
 
@@ -49,6 +50,11 @@ public class AuditListener implements PostInsertEventListener, PostUpdateEventLi
                 String fieldName = propertyNames[i];
                 Object oldValue = oldState[i];
                 Object newValue = state[i];
+
+                if(keyFields.contains(fieldName)) {
+                    changes.put(fieldName, newValue);
+                    continue;
+                }
 
                 // Format: null -> newValue or oldValue -> null or oldValue -> newValue
                 if (oldValue == null && newValue != null) {
