@@ -1,0 +1,32 @@
+spring:
+  jackson:
+    deserialization:
+      read-unknown-enum-values-as-null: true
+  liquibase:
+    enabled: ${LIQUIBASE_ENABLED:true}
+  ##Datasource confiuration
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:ctrm_becrux_dev}?currentSchema=${DB_SCHEMA:taomish}
+    hostname: ${DB_HOST}
+    databasename: ${DB_NAME}
+    #port: ${DB_PORT}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      auto-commit: true
+      maximum-pool-size: 50
+
+    # initialization-mode: always
+  ##JPA configuration
+  jpa:
+    properties:
+      hibernate:
+        proc:
+          param_null_passing: true
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: false
+    show-sql: ${SHOW_SQL:true}
