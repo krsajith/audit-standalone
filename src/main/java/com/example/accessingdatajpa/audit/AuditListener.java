@@ -62,7 +62,8 @@ public class AuditListener implements PostInsertEventListener, PostUpdateEventLi
                 } else if (oldValue != null && newValue == null) {
                     changes.put(fieldName, "NULL");  // Indicator for value set to null
                 } else {
-                    changes.put(fieldName, oldValue + " -> " + newValue);
+                    changes.put(fieldName, newValue);
+//                    changes.put(fieldName, oldValue + " -> " + newValue);
                 }
             }
         }

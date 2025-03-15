@@ -19,6 +19,7 @@ package com.example.accessingdatajpa;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +35,23 @@ public class CustomerRepositoryTests {
 	@Autowired
 	private CustomerRepository customers;
 
+
+	@Test
+	public void testUpdatewitoutFetch() {
+		var customer = new Customer();
+		customer.setUuid(UUID.fromString("6e5cfe54-5b4b-486f-b160-2b15ae859131"));
+		customer.setTenantId("System");
+		customer.setFirstName("java 21");
+		customer.setLastName("Doe");
+		customers.existsById(customer.getUuid());
+		customer = customers.save(customer);
+	}
+
 	@Test
 	public void testFindByLastName() {
 		var customer = new Customer();
 		customer.setTenantId("System");
-		customer.setFirstName("John");
+		customer.setFirstName("Create");
 		customer.setLastName("Doe");
 		customer = customers.save(customer);
 
@@ -46,7 +59,10 @@ public class CustomerRepositoryTests {
 
 		assertThat(findByLastName).extracting(Customer::getLastName).containsOnly(customer.getLastName());
 
-		customer.setFirstName("Jane");
+		customer.setFirstName("Update 01");
+		customers.save(customer);
+
+		customer.setFirstName("Update 02");
 		customers.save(customer);
 	}
 }

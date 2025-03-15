@@ -20,11 +20,11 @@ public class AccessingDataJpaApplication {
 	public CommandLineRunner demo(CustomerRepository repository) {
 		return (args) -> {
 			// save a few customers
-			var customer = new Customer();
-			customer.setFirstName("John");
-			customer.setLastName("Doe");
-			repository.save(customer);
-			log.info("");
+//			var customer = new Customer();
+//			customer.setFirstName("John");
+//			customer.setLastName("Doe");
+//			repository.save(customer);
+//			log.info("");
 		};
 	}
 
