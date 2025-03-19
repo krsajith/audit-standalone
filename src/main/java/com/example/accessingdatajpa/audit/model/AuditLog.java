@@ -14,7 +14,7 @@ import java.util.Map;
 @Getter
 @Setter
 @Entity
-@Table(name = "ctrm_audit_log")
+@Table(name = "ctrm_audit_log_v2")
 public class AuditLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

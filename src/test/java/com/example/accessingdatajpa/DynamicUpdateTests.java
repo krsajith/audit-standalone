@@ -16,33 +16,34 @@
 
 package com.example.accessingdatajpa;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import com.taomish.services.JSLTService;
-import com.taomish.utils.OkHttpClientUtil;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootTest
 @ComponentScan(basePackages = {"com.taomish.utils"},basePackageClasses = {})
-public class CustomerRepositoryTests {
+public class DynamicUpdateTests {
 //	@Autowired
 //	private TestEntityManager entityManager;
 
 	@Autowired
 	private CustomerRepository customers;
 
+	@Autowired
+	private EntityManager entityManager;
+
 
 	@Test
-	public void testUpdatewitoutFetch() {
+	void testCreateCustomer() {
 		var customer = new Customer();
 		customer.setUuid(UUID.fromString("742baf3a-6a3d-4911-81e4-9412d916d1d3"));
 		customer.setTenantId("System");
@@ -50,27 +51,23 @@ public class CustomerRepositoryTests {
 		customer.setLastName("Doe");
 		customers.existsById(customer.getUuid());
 		customer = customers.save(customer);
+
+
+//		var dc = entityManager.find(DynamicCustomer.class, customer.getUuid());
+//		dc.setFirstName("Java");
+//		dc.setLastName("Doe");
+//		entityManager.persist(dc);
 	}
 
 	@Test
-	public void testFindByLastName() {
-		var customer = new Customer();
-		customer.setTenantId("System");
-		customer.setFirstName("Create");
-		customer.setLastName("Doe");
-		customer = customers.save(customer);
-
-		customer.setAddress(new Address("1","2"));
-		customer.setAddressList(List.of(new Address("3","4")));
-		customer.setSkillSet(Set.of("Java", "Python"));
-
-		customer.setFirstName("Update 01");
-		customers.save(customer);
-
-		customer.setFirstName("Update 02");
-		customers.save(customer);
-
-		customer.setSkillSet(Set.of("Java 8", "Python 3"));
-		customers.save(customer);
+	@Transactional
+	@Rollback(false)
+	void testUpdateCustomer() {
+		var dc = entityManager.find(DynamicCustomer.class, UUID.fromString("41490830-96a2-4092-b1d4-b8237ae2ddd2"));
+		dc.setFirstName("Updated First Name");
+		dc.setLastName("Updated Last Name");
+		entityManager.persist(dc);
+		entityManager.flush();
 	}
+
 }
